@@ -1,0 +1,64 @@
+---
+title: "Simulation-Based Statistical Tests"
+subtitle: "There is Only One Test"
+author: "Paul Johnson"
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# import packages
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(ggplot2)
+  library(faux)
+  library(infer)
+})
+
+# set plot theme
+theme_set(scwplot::theme_scw(base_size = 10)) +
+  theme_update(
+    plot.title = element_text(margin = margin(b = 5)),
+    legend.text = element_text(colour = "#5D5F5F", size = rel(.8)),
+    legend.key.width = unit(.75, "cm"),
+    plot.margin = margin(c(t = .5, r = 0, b = .5, l = .5), unit = "cm")
+  )
+
+# import data
+
+```
+
+# Hypothesis Testing {data-background-color="#425563" data-verticator="#E8EDEE"}
+
+A Significant Issue
+
+## What is a Hypothesis? {.center}
+
+
+## Hypothesis Testing {.center}
+
+
+## There are Many Hypothesis Tests {.center}
+
+## Further Resources {.center}
+
+
+# Thank You!
+
+Contact:
+<br>
+
+<ul >
+{{< fa solid envelope >}} [paul.johnson50@nhs.net](mailto: paul.johnson50@nhs.net)
+</ul>
+
+
+Code & Slides:
+<br>
+
+<ul >
+{{< fa brands github >}}[/NHS-South-Central-and-West/linear-regression-from-scratch](https://github.com/nhs-south-central-and-west/simulation-based-tests)
+</ul>
+
+## References
