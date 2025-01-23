@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "index.html#what-is-a-hypothesis",
+    "href": "index.html#what-is-a-hypothesis",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "What is a Hypothesis?",
+    "text": "What is a Hypothesis?\n\nA falsifiable statement about the world that forms the basis for scientific enquiry.\nA hypothesis posits the effect we expect to observe in our sample data, in order to make generalisable statements about the effect in the population.\nHypotheses are derived from theories – what we should expect to observe in our data, given the theory.\nQuantitative research seeks to test hypotheses, and the results are a step closer to drawing inferences about the world."
+  },
+  {
+    "objectID": "index.html#hypothesis-testing-1",
+    "href": "index.html#hypothesis-testing-1",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "Hypothesis Testing",
+    "text": "Hypothesis Testing\n\nHypothesis tests measure the compatibility of the observed data with what we should observe if the hypothesis (and all other assumptions of the test) is true.\nA hypothesis test quantifies our confidence that what we observe in the sample did not occur by chance (and is therefore generalisable to the population)\nThe Null Hypothesis Significance Testing (NHST) framework is the most common approach to testing hypotheses.\n\nNull Hypothesis (\\(H_0\\)) = No effect in the population\nAlternative Hypothesis (\\(H_1\\)) = The effect in the population is not equal to zero\n\n\nA hypothesis test in NHST seeks to reject the null, which provides support for (but does not confirm) the alternative hypothesis.\nNHST is controversial, but it is pervasive across science."
+  },
+  {
+    "objectID": "index.html#a-common-testing-framework",
+    "href": "index.html#a-common-testing-framework",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "A Common Testing Framework",
+    "text": "A Common Testing Framework\n\nSet test (often null) hypothesis.\nGenerate test distribution – the data distribution we should expect to observe if test hypothesis is true (and all other assumptions met).\nCompute test statistic – quantifying how extreme the observed data distribution is given the test distribution.\nCompute p-value – quantifying the probability of observing a test statistic as large or larger if test hypothesis is true."
+  },
+  {
+    "objectID": "index.html#one-sample-t-test",
+    "href": "index.html#one-sample-t-test",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "One-Sample T-Test",
+    "text": "One-Sample T-Test\n\n\nset.seed(42)\n\niq_scores &lt;- \n  tibble(score = rnorm(50, mean = 105, sd = 15))\n\nt_test(\n  iq_scores, response = score, \n  mu = 100, alternative = \"greater\"\n  ) |&gt; \n  mutate(\n    across(where(is.numeric), ~round(.x, 2))\n    ) |&gt;\n  gt::gt()\n\n\n\n\n\n\nstatistic\nt_df\np_value\nalternative\nestimate\nlower_ci\nupper_ci\n\n\n1.83\n49\n0.04\ngreater\n104.46\n100.37\nInf"
+  },
+  {
+    "objectID": "index.html#a-test-for-every-eventuality",
+    "href": "index.html#a-test-for-every-eventuality",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "A Test for Every Eventuality",
+    "text": "A Test for Every Eventuality\n\nT-tests (one sample, paired, two-samples)\nChi-squared tests\nANOVA\nMann-Whitney u-test\nWilcoxon signed rank test\nFisher exact test\nMcNemar test\nKruskal-Wallis test\nAnd probably thousands more…"
+  },
+  {
+    "objectID": "index.html#simulation-based-hypothesis-tests",
+    "href": "index.html#simulation-based-hypothesis-tests",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "Simulation-Based Hypothesis Tests",
+    "text": "Simulation-Based Hypothesis Tests"
+  },
+  {
+    "objectID": "index.html#simulating-the-common-testing-framework",
+    "href": "index.html#simulating-the-common-testing-framework",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "Simulating the Common Testing Framework",
+    "text": "Simulating the Common Testing Framework\n\nAll hypothesis tests are trying to do the same thing – compare the observed data against a test distribution.\nWe can leverage this and, instead, simulate the data distribution that our test hypothesis should produce.\nWe just need a test statistic (a measurement of the size of the effect, like absolute difference in means), our test/null hypothesis and a model for generating a distribution from it, and a method for computing the p-value (Downey 2016)."
+  },
+  {
+    "objectID": "index.html#simulating-a-t-test",
+    "href": "index.html#simulating-a-t-test",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "Simulating a T-Test",
+    "text": "Simulating a T-Test\n\n\nt &lt;- \n  iq_scores |&gt; \n  specify(response = score) |&gt; \n  calculate(stat = \"mean\")\n\nnull &lt;- \n  iq_scores |&gt;\n  specify(response = score) |&gt; \n  hypothesize(null = \"point\", mu = 100) |&gt; \n  generate(reps = 1000, type = \"bootstrap\") |&gt; \n  calculate(stat = \"mean\")\n\np &lt;- null |&gt; get_p_value(obs_stat = t, direction = \"greater\")\n\nnull |&gt;\n  visualize() + \n  shade_p_value(t, direction = NULL, color = \"#00A499\") +\n  geom_hline(yintercept = 0, colour = \"#333333\", linewidth = 1) +\n  annotate(\n    \"text\", x = 95, y = 125, \n    label = paste0(\"t = \", round(t, 2), \"\\n p = \", round(p, 2)),\n    size = rel(6), color=\"grey30\"\n    ) +\n  labs(x = \"IQ Score\", y = NULL, title = NULL)"
+  },
+  {
+    "objectID": "index.html#further-resources",
+    "href": "index.html#further-resources",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "Further Resources",
+    "text": "Further Resources\n\n{infer}\nThere is Still Only One Test\nElements of Data Science - Hypothesis Testing\nThe Permutation Test"
+  },
+  {
+    "objectID": "index.html#references",
+    "href": "index.html#references",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "References",
+    "text": "References\n\n\n\n\nDowney, Allen. 2016. “There Is Still One One Test.” Probably Overthinking It. https://allendowney.substack.com/p/there-is-still-only-one-test."
+  }
+]
