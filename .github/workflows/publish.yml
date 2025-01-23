@@ -25,8 +25,8 @@ jobs:
       - name: Set up renv
         uses: r-lib/actions/setup-renv@v2
 
-      - name: Install ragg
-        run: install.packages("ragg")
+      - name: Install further dependencies
+        run: install.packages(c("ragg", "downlit", "xml2"))
         shell: Rscript {0}
 
       - name: Render and Publish
