@@ -6,7 +6,8 @@ format:
     menu: false
     controls: false
     section-divs: true
-    preview-links: true
+    preview-links: false
+    link-external-newwindow: true
     embed-resources: true
     transition: fade
     background-transition: fade
@@ -24,7 +25,6 @@ format:
     fig-height: 7
     fig-align: center
     output-location: column
-    code-link: true
 
 editor: source
 
