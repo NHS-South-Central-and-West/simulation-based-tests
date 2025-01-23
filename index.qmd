@@ -91,7 +91,7 @@ t_test(
 
 ![](/man/figures/simulation_tests.png)
 
-## Simulating the Common Testing Framework {.center}
+## Simulated Testing Framework {.center}
 
 - All hypothesis tests are trying to do the same thing -- compare the observed data against a test distribution.
 - We can leverage this and, instead, simulate the data distribution that our test hypothesis should produce.
