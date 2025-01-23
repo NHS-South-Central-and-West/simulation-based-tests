@@ -42,11 +42,11 @@
     "text": "Simulation-Based Hypothesis Tests"
   },
   {
-    "objectID": "index.html#simulating-the-common-testing-framework",
-    "href": "index.html#simulating-the-common-testing-framework",
+    "objectID": "index.html#simulated-testing-framework",
+    "href": "index.html#simulated-testing-framework",
     "title": "Simulation-Based Hypothesis Testing",
-    "section": "Simulating the Common Testing Framework",
-    "text": "Simulating the Common Testing Framework\n\nAll hypothesis tests are trying to do the same thing – compare the observed data against a test distribution.\nWe can leverage this and, instead, simulate the data distribution that our test hypothesis should produce.\nWe just need a test statistic (a measurement of the size of the effect, like absolute difference in means), our test/null hypothesis and a model for generating a distribution from it, and a method for computing the p-value (Downey 2016)."
+    "section": "Simulated Testing Framework",
+    "text": "Simulated Testing Framework\n\nAll hypothesis tests are trying to do the same thing – compare the observed data against a test distribution.\nWe can leverage this and, instead, simulate the data distribution that our test hypothesis should produce.\nWe just need a test statistic (a measurement of the size of the effect, like absolute difference in means), our test/null hypothesis and a model for generating a distribution from it, and a method for computing the p-value (Downey 2016)."
   },
   {
     "objectID": "index.html#simulating-a-t-test",
