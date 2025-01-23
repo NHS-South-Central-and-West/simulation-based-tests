@@ -13,7 +13,7 @@ format:
     navigation-mode: linear
     email-obfuscation: javascript
     theme: theme.scss
-    footer: '**Paul Johnson //** Simulation-Based Hypothesis Testing **//** Jan 23, 2025'
+    footer: '**Paul Johnson //** Simulation-Based Hypothesis Testing **//** Jan 24, 2025'
     progress: true
     multiplex: false
     scrollable: false
@@ -24,6 +24,7 @@ format:
     fig-height: 7
     fig-align: center
     output-location: column
+    code-link: true
 
 editor: source
 
@@ -42,8 +43,6 @@ revealjs-plugins:
   - verticator
   
 bibliography: references.bib
-
-code-link: true
 
 title-slide-attributes:
     data-background-image: "man/figures/logo.jpg"
