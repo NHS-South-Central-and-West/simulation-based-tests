@@ -89,26 +89,31 @@ details {
 
 details>summary {
   font-family: 'Fira Code', monospace;
-  font-size: 1em;
+  font-size: 0.8em;
   color: #a0a0a0;
 }
 
 code>a, code>span {
   font-family: 'Fira Code', monospace;
-  font-size: .7em;
+  font-size: .5em;
 }
 
 .reveal code {
   font-family: 'Fira Code', monospace;
+  font-size: .8em;
 }
 
 .reveal p>code {
-  font-size: .7em;
+  font-size: .8em;
 }
 
 .reveal pre code {
   font-weight: 300;
-  font-size: .65em;
+  font-size: .8em;
+}
+
+.reveal pre.sourceCode code {
+  font-size: .8em
 }
 
 .panel-tabset li>a {
