@@ -1,6 +1,6 @@
 ---
-title: "Simulation-Based Statistical Tests"
-subtitle: "There is Only One Test"
+title: "Simulation-Based Hypothesis Testing"
+subtitle: "There Really is Only One Test"
 author: "Paul Johnson"
 ---
 
@@ -12,7 +12,6 @@ author: "Paul Johnson"
 suppressPackageStartupMessages({
   library(dplyr)
   library(ggplot2)
-  library(faux)
   library(infer)
 })
 
@@ -24,25 +23,116 @@ theme_set(scwplot::theme_scw(base_size = 10)) +
     legend.key.width = unit(.75, "cm"),
     plot.margin = margin(c(t = .5, r = 0, b = .5, l = .5), unit = "cm")
   )
-
-# import data
-
 ```
 
 # Hypothesis Testing {data-background-color="#425563" data-verticator="#E8EDEE"}
 
-A Significant Issue
+Issues of Significance
 
 ## What is a Hypothesis? {.center}
 
+- A falsifiable statement about the world that forms the basis for scientific enquiry.
+- A hypothesis posits the effect we expect to observe in our sample data, in order to make generalisable statements about the effect in the population.
+- Hypotheses are derived from theories -- what we should expect to observe in our data, given the theory.
+- Quantitative research seeks to test hypotheses, and the results are a step closer to drawing inferences about the world.
 
 ## Hypothesis Testing {.center}
 
+- Hypothesis tests measure the compatibility of the observed data with what we should observe if the hypothesis (and all other assumptions of the test) is true.
+- A hypothesis test quantifies our confidence that what we observe in the sample did not occur by chance (and is therefore generalisable to the population)
+- The Null Hypothesis Significance Testing (NHST) framework is the most common approach to testing hypotheses.
+    - Null Hypothesis ($H_0$) = No effect in the population
+    - Alternative Hypothesis ($H_1$) = The effect in the population is not equal to zero
+- A hypothesis test in NHST seeks to reject the null, which provides support for (but does not confirm) the alternative hypothesis.
+- NHST is controversial, but it is pervasive across science.
 
-## There are Many Hypothesis Tests {.center}
+## A Common Testing Framework {.center}
+
+1. Set test (often null) hypothesis.
+2. Generate test distribution -- the data distribution we should expect to observe if test hypothesis is true (and all other assumptions met).
+3. Compute test statistic -- quantifying how extreme the observed data distribution is given the test distribution.
+3. Compute p-value -- quantifying the probability of observing a test statistic as large or larger if test hypothesis is true.
+
+## One-Sample T-Test
+
+```{r}
+#| label: larger-sample
+
+set.seed(42)
+
+iq_scores <- 
+  tibble(score = rnorm(50, mean = 105, sd = 15))
+
+t_test(
+  iq_scores, response = score, 
+  mu = 100, alternative = "greater"
+  ) |> 
+  mutate(
+    across(where(is.numeric), ~round(.x, 2))
+    ) |>
+  gt::gt()
+```
+
+## A Test for Every Eventuality {.center}
+
+- T-tests (one sample, paired, two-samples)
+- Chi-squared tests
+- ANOVA
+- Mann-Whitney u-test
+- Wilcoxon signed rank test
+- Fisher exact test
+- McNemar test
+- Kruskal-Wallis test
+- And probably thousands more...
+
+# THERE MUST BE A BETTER WAY {data-background-color="#425563" data-verticator="#E8EDEE"}
+
+## Simulation-Based Hypothesis Tests {.center}
+
+![](/man/figures/simulation_tests.png)
+
+## Simulating the Common Testing Framework {.center}
+
+- All hypothesis tests are trying to do the same thing -- compare the observed data against a test distribution.
+- We can leverage this and, instead, simulate the data distribution that our test hypothesis should produce.
+- We just need a test statistic (a measurement of the size of the effect, like absolute difference in means), our test/null hypothesis and a model for generating a distribution from it, and a method for computing the p-value [@downey2016].
+
+## Simulating a T-Test {.center}
+
+```{r}
+
+t <- 
+  iq_scores |> 
+  specify(response = score) |> 
+  calculate(stat = "mean")
+
+null <- 
+  iq_scores |>
+  specify(response = score) |> 
+  hypothesize(null = "point", mu = 100) |> 
+  generate(reps = 1000, type = "bootstrap") |> 
+  calculate(stat = "mean")
+
+p <- null |> get_p_value(obs_stat = t, direction = "greater")
+
+null |>
+  visualize() + 
+  shade_p_value(t, direction = NULL, color = "#00A499") +
+  geom_hline(yintercept = 0, colour = "#333333", linewidth = 1) +
+  annotate(
+    "text", x = 95, y = 125, 
+    label = paste0("t = ", round(t, 2), "\n p = ", round(p, 2)),
+    size = rel(6), color="grey30"
+    ) +
+  labs(x = "IQ Score", y = NULL, title = NULL)
+```
 
 ## Further Resources {.center}
 
+- [{infer}](https://infer.tidymodels.org)
+- [There is Still Only One Test](https://allendowney.substack.com/p/there-is-still-only-one-test)
+- [Elements of Data Science - Hypothesis Testing](https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html)
+- [The Permutation Test](https://www.jwilber.me/permutationtest/)
 
 # Thank You!
 
