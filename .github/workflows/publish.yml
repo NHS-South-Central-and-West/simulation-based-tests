@@ -25,6 +25,10 @@ jobs:
       - name: Set up renv
         uses: r-lib/actions/setup-renv@v2
 
+      - name: Install ragg
+        run: install.packages("ragg")
+        shell: Rscript {0}
+
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
