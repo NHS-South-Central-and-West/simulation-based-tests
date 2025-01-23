@@ -11,7 +11,7 @@
     "href": "index.html#hypothesis-testing-1",
     "title": "Simulation-Based Hypothesis Testing",
     "section": "Hypothesis Testing",
-    "text": "Hypothesis Testing\n\nHypothesis tests measure the compatibility of the observed data with what we should observe if the hypothesis (and all other assumptions of the test) is true.\nA hypothesis test quantifies our confidence that what we observe in the sample did not occur by chance (and is therefore generalisable to the population)\nThe Null Hypothesis Significance Testing (NHST) framework is the most common approach to testing hypotheses.\n\nNull Hypothesis (\\(H_0\\)) = No effect in the population\nAlternative Hypothesis (\\(H_1\\)) = The effect in the population is not equal to zero\n\nA hypothesis test in NHST seeks to reject the null, which provides support for (but does not confirm) the alternative hypothesis.\nNHST is controversial, but it is pervasive across science."
+    "text": "Hypothesis Testing\n\nHypothesis tests measure the compatibility of the observed data with what we should observe if the hypothesis (and all other assumptions of the test) is true.\nA hypothesis test quantifies our confidence that what we observe in the sample did not occur by chance (and is therefore generalisable to the population)\nThe Null Hypothesis Significance Testing (NHST) framework is the most common approach to testing hypotheses.\n\nNull Hypothesis (\\(H_0\\)) = No effect in the population\nAlternative Hypothesis (\\(H_1\\)) = The effect in the population is not equal to zero\n\n\nA hypothesis test in NHST seeks to reject the null, which provides support for (but does not confirm) the alternative hypothesis.\nNHST is controversial, but it is pervasive across science."
   },
   {
     "objectID": "index.html#a-common-testing-framework",
@@ -25,7 +25,7 @@
     "href": "index.html#one-sample-t-test",
     "title": "Simulation-Based Hypothesis Testing",
     "section": "One-Sample T-Test",
-    "text": "One-Sample T-Test\n\n\nset.seed(42)\n\niq_scores &lt;- \n  tibble(score = rnorm(50, mean = 105, sd = 15))\n\nt_test(\n  iq_scores, response = score, \n  mu = 100, alternative = \"greater\"\n  ) |&gt; \n  mutate(\n    across(where(is.numeric), ~round(.x, 2))\n    ) |&gt;\n  gt::gt()\n\n\n\n\n\n\n\n\nstatistic\nt_df\np_value\nalternative\nestimate\nlower_ci\nupper_ci\n\n\n\n\n1.83\n49\n0.04\ngreater\n104.46\n100.37\nInf"
+    "text": "One-Sample T-Test\n\n\nset.seed(42)\n\niq_scores &lt;- \n  tibble(score = rnorm(50, mean = 105, sd = 15))\n\nt_test(\n  iq_scores, response = score, \n  mu = 100, alternative = \"greater\"\n  ) |&gt; \n  mutate(\n    across(where(is.numeric), ~round(.x, 2))\n    ) |&gt;\n  gt::gt()\n\n\n\n\n\n\nstatistic\nt_df\np_value\nalternative\nestimate\nlower_ci\nupper_ci\n\n\n1.83\n49\n0.04\ngreater\n104.46\n100.37\nInf"
   },
   {
     "objectID": "index.html#a-test-for-every-eventuality",
