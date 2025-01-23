@@ -148,7 +148,7 @@ Code & Slides:
 <br>
 
 <ul >
-{{< fa brands github >}}[/NHS-South-Central-and-West/linear-regression-from-scratch](https://github.com/nhs-south-central-and-west/simulation-based-tests)
+{{< fa brands github >}}[/NHS-South-Central-and-West/simulation-based-tests](https://github.com/nhs-south-central-and-west/simulation-based-tests)
 </ul>
 
 ## References
