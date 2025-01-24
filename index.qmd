@@ -32,14 +32,14 @@ Issues of Significance
 ## What is a Hypothesis? {.center}
 
 - A falsifiable statement about the world that forms the basis for scientific enquiry.
-- A hypothesis posits the effect we expect to observe in our sample data, in order to make generalisable statements about the effect in the population.
+- A hypothesis posits the effect we expect to observe in our sample data, in order to make generalisable statements about the effect in the population [@blackwell2023].
 - Hypotheses are derived from theories -- what we should expect to observe in our data, given the theory.
 - Quantitative research seeks to test hypotheses, and the results are a step closer to drawing inferences about the world.
 
 ## Hypothesis Testing {.center}
 
 - Hypothesis tests measure the compatibility of the observed data with what we should observe if the hypothesis (and all other assumptions of the test) is true.
-- A hypothesis test quantifies our confidence that what we observe in the sample did not occur by chance (and is therefore generalisable to the population)
+- A hypothesis test quantifies our confidence that what we observe in the sample did not occur by chance (and is therefore generalisable to the population).
 - The Null Hypothesis Significance Testing (NHST) framework is the most common approach to testing hypotheses.
     - Null Hypothesis ($H_0$) = No effect in the population
     - Alternative Hypothesis ($H_1$) = The effect in the population is not equal to zero
@@ -56,20 +56,97 @@ Issues of Significance
 ## One-Sample T-Test
 
 ```{r}
-#| label: larger-sample
+#| label: smaller-samples-distributions
 
 set.seed(42)
 
-iq_scores <- 
-  tibble(score = rnorm(50, mean = 105, sd = 15))
+score_distributions <- 
+  tibble(
+    observed = rnorm(50, mean = 105, sd = 15),
+    null = rnorm(50, mean = 100, sd = 15)
+    ) |> 
+  tidyr::pivot_longer(
+    cols = everything(), names_to = "dist", values_to = "value"
+    )
+
+score_distributions |> 
+  ggplot(aes(value, fill = dist)) +
+  geom_density(alpha = 0.6) +
+  labs(
+    title = "IQ Scores Observed & Null Distributions (n = 50)",
+    x = "IQ Score", y = NULL
+    ) +
+  scwplot::scale_fill_qualitative(palette = "scw")
+```
+
+## One-Sample T-Test
+
+```{r}
+#| label: smaller-sample-test
+#| tbl-cap: IQ Scores T-Test (n = 50)
+
+set.seed(42)
+
+smaller_sample <- 
+  tibble(iq_score = rnorm(50, mean = 105, sd = 15))
+
 
 t_test(
-  iq_scores, response = score, 
-  mu = 100, alternative = "greater"
+  smaller_sample, response = iq_score, 
+  mu = 100, alternative = "two-sided"
   ) |> 
   mutate(
     across(where(is.numeric), ~round(.x, 2))
     ) |>
+  select(statistic, p_value, estimate, lower_ci, upper_ci) |> 
+  gt::gt()
+```
+
+## One-Sample T-Test
+
+```{r}
+#| label: larger-samples-distributions
+
+set.seed(42)
+
+score_distributions <- 
+  tibble(
+    observed = rnorm(75, mean = 105, sd = 15),
+    null = rnorm(75, mean = 100, sd = 15)
+    ) |> 
+  tidyr::pivot_longer(
+    cols = everything(), names_to = "dist", values_to = "value"
+    )
+
+score_distributions |> 
+  ggplot(aes(value, fill = dist)) +
+  geom_density(alpha = 0.6) +
+  labs(
+    title = "IQ Scores Observed & Null Distributions (n = 75)",
+    x = "IQ Score", y = NULL
+    ) +
+  scwplot::scale_fill_qualitative(palette = "scw")
+```
+
+## One-Sample T-Test
+
+```{r}
+#| label: larger-sample-test
+#| tbl-cap: IQ Scores T-Test (n = 75)
+
+set.seed(42)
+
+larger_sample <- 
+  tibble(iq_score = rnorm(75, mean = 105, sd = 15))
+
+t_test(
+  larger_sample, response = iq_score, 
+  mu = 100, alternative = "two-sided"
+  ) |> 
+  mutate(
+    across(where(is.numeric), ~round(.x, 2))
+    ) |>
+  select(statistic, p_value, estimate, lower_ci, upper_ci) |> 
   gt::gt()
 ```
 
@@ -100,25 +177,25 @@ t_test(
 ## Simulating a T-Test {.center}
 
 ```{r}
+#| label: simulate-smaller-sample
 
 t <- 
-  iq_scores |> 
-  specify(response = score) |> 
+  smaller_sample |> 
+  specify(response = iq_score) |> 
   calculate(stat = "mean")
 
 null <- 
-  iq_scores |>
-  specify(response = score) |> 
+  smaller_sample |>
+  specify(response = iq_score) |> 
   hypothesize(null = "point", mu = 100) |> 
   generate(reps = 1000, type = "bootstrap") |> 
   calculate(stat = "mean")
 
-p <- null |> get_p_value(obs_stat = t, direction = "greater")
+p <- null |> get_p_value(obs_stat = t, direction = "two-sided")
 
 null |>
   visualize() + 
-  shade_p_value(t, direction = NULL, color = "#00A499") +
-  geom_hline(yintercept = 0, colour = "#333333", linewidth = 1) +
+  shade_p_value(t, direction = "two-sided") +
   annotate(
     "text", x = 95, y = 125, 
     label = paste0("t = ", round(t, 2), "\n p = ", round(p, 2)),
@@ -127,12 +204,57 @@ null |>
   labs(x = "IQ Score", y = NULL, title = NULL)
 ```
 
+## Simulating a T-Test {.center}
+
+```{r}
+#| label: simulate-larger-sample
+
+t <- 
+  larger_sample |> 
+  specify(response = iq_score) |> 
+  calculate(stat = "mean")
+
+null <- 
+  larger_sample |>
+  specify(response = iq_score) |> 
+  hypothesize(null = "point", mu = 100) |> 
+  generate(reps = 1000, type = "bootstrap") |> 
+  calculate(stat = "mean")
+
+p <- null |> get_p_value(obs_stat = t, direction = "two-sided")
+
+null |>
+  visualize() + 
+  shade_p_value(t, direction = "two-sided") +
+  annotate(
+    "text", x = 95, y = 125, 
+    label = paste0("t = ", round(t, 2), "\n p = ", round(p, 2)),
+    size = rel(6), color="grey30"
+    ) +
+  labs(x = "IQ Score", y = NULL, title = NULL)
+```
+
+## Advantages of the Simulation Approach {.center}
+
+- There is only one test!
+- This approach is transparent, quick, and flexible.
+- Building tests from simulations is an excellent way to gain an intuition for how hypothesis testing works.
+- Learning to use simulations for checking assumptions and considering the implications of your model is good practice.
+
+## Conclusion {.center}
+
+- There is an endless supply of statistical tests for every test statistic, data distribution, and method for calculating the p-value.
+- Most of these [statistical tests are just linear models](https://lindeloev.github.io/tests-as-linear/) anyway.
+- They are all doing the same thing. There is only one test. 
+- Use simulation-based hypothesis testing and never have to learn what a Wilcoxon signed rank test actually is.
+
 ## Further Resources {.center}
 
 - [{infer}](https://infer.tidymodels.org)
 - [There is Still Only One Test](https://allendowney.substack.com/p/there-is-still-only-one-test)
 - [Elements of Data Science - Hypothesis Testing](https://allendowney.github.io/ElementsOfDataScience/13_hypothesis.html)
 - [The Permutation Test](https://www.jwilber.me/permutationtest/)
+- [Data Science Guides - Hypothesis Testing](https://r-data-science-guides.netlify.app/hypothesis_testing_r)
 
 # Thank You!
 
