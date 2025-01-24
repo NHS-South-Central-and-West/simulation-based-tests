@@ -4,14 +4,14 @@
     "href": "index.html#what-is-a-hypothesis",
     "title": "Simulation-Based Hypothesis Testing",
     "section": "What is a Hypothesis?",
-    "text": "What is a Hypothesis?\n\nA falsifiable statement about the world that forms the basis for scientific enquiry.\nA hypothesis posits the effect we expect to observe in our sample data, in order to make generalisable statements about the effect in the population.\nHypotheses are derived from theories – what we should expect to observe in our data, given the theory.\nQuantitative research seeks to test hypotheses, and the results are a step closer to drawing inferences about the world."
+    "text": "What is a Hypothesis?\n\nA falsifiable statement about the world that forms the basis for scientific enquiry.\nA hypothesis posits the effect we expect to observe in our sample data, in order to make generalisable statements about the effect in the population (Blackwell 2023).\nHypotheses are derived from theories – what we should expect to observe in our data, given the theory.\nQuantitative research seeks to test hypotheses, and the results are a step closer to drawing inferences about the world."
   },
   {
     "objectID": "index.html#hypothesis-testing-1",
     "href": "index.html#hypothesis-testing-1",
     "title": "Simulation-Based Hypothesis Testing",
     "section": "Hypothesis Testing",
-    "text": "Hypothesis Testing\n\nHypothesis tests measure the compatibility of the observed data with what we should observe if the hypothesis (and all other assumptions of the test) is true.\nA hypothesis test quantifies our confidence that what we observe in the sample did not occur by chance (and is therefore generalisable to the population)\nThe Null Hypothesis Significance Testing (NHST) framework is the most common approach to testing hypotheses.\n\nNull Hypothesis (\\(H_0\\)) = No effect in the population\nAlternative Hypothesis (\\(H_1\\)) = The effect in the population is not equal to zero\n\nA hypothesis test in NHST seeks to reject the null, which provides support for (but does not confirm) the alternative hypothesis.\nNHST is controversial, but it is pervasive across science."
+    "text": "Hypothesis Testing\n\nHypothesis tests measure the compatibility of the observed data with what we should observe if the hypothesis (and all other assumptions of the test) is true.\nA hypothesis test quantifies our confidence that what we observe in the sample did not occur by chance (and is therefore generalisable to the population).\nThe Null Hypothesis Significance Testing (NHST) framework is the most common approach to testing hypotheses.\n\nNull Hypothesis (\\(H_0\\)) = No effect in the population\nAlternative Hypothesis (\\(H_1\\)) = The effect in the population is not equal to zero\n\nA hypothesis test in NHST seeks to reject the null, which provides support for (but does not confirm) the alternative hypothesis.\nNHST is controversial, but it is pervasive across science."
   },
   {
     "objectID": "index.html#a-common-testing-framework",
@@ -25,7 +25,28 @@
     "href": "index.html#one-sample-t-test",
     "title": "Simulation-Based Hypothesis Testing",
     "section": "One-Sample T-Test",
-    "text": "One-Sample T-Test\n\n\nset.seed(42)\n\niq_scores &lt;- \n  tibble(score = rnorm(50, mean = 105, sd = 15))\n\nt_test(\n  iq_scores, response = score, \n  mu = 100, alternative = \"greater\"\n  ) |&gt; \n  mutate(\n    across(where(is.numeric), ~round(.x, 2))\n    ) |&gt;\n  gt::gt()\n\n\n\n\n\n\n\n\nstatistic\nt_df\np_value\nalternative\nestimate\nlower_ci\nupper_ci\n\n\n\n\n1.83\n49\n0.04\ngreater\n104.46\n100.37\nInf"
+    "text": "One-Sample T-Test\n\n\nset.seed(42)\n\nscore_distributions &lt;- \n  tibble(\n    observed = rnorm(50, mean = 105, sd = 15),\n    null = rnorm(50, mean = 100, sd = 15)\n    ) |&gt; \n  tidyr::pivot_longer(\n    cols = everything(), names_to = \"dist\", values_to = \"value\"\n    )\n\nscore_distributions |&gt; \n  ggplot(aes(value, fill = dist)) +\n  geom_density(alpha = 0.6) +\n  labs(\n    title = \"IQ Scores Observed & Null Distributions (n = 50)\",\n    x = \"IQ Score\", y = NULL\n    ) +\n  scwplot::scale_fill_qualitative(palette = \"scw\")"
+  },
+  {
+    "objectID": "index.html#one-sample-t-test-1",
+    "href": "index.html#one-sample-t-test-1",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "One-Sample T-Test",
+    "text": "One-Sample T-Test\n\n\nset.seed(42)\n\nsmaller_sample &lt;- \n  tibble(iq_score = rnorm(50, mean = 105, sd = 15))\n\n\nt_test(\n  smaller_sample, response = iq_score, \n  mu = 100, alternative = \"two-sided\"\n  ) |&gt; \n  mutate(\n    across(where(is.numeric), ~round(.x, 2))\n    ) |&gt;\n  select(statistic, p_value, estimate, lower_ci, upper_ci) |&gt; \n  gt::gt()\n\n\n\n\n\n\nIQ Scores T-Test (n = 50)\n\n\nstatistic\np_value\nestimate\nlower_ci\nupper_ci\n\n\n\n\n1.83\n0.07\n104.46\n99.56\n109.37"
+  },
+  {
+    "objectID": "index.html#one-sample-t-test-2",
+    "href": "index.html#one-sample-t-test-2",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "One-Sample T-Test",
+    "text": "One-Sample T-Test\n\n\nset.seed(42)\n\nscore_distributions &lt;- \n  tibble(\n    observed = rnorm(75, mean = 105, sd = 15),\n    null = rnorm(75, mean = 100, sd = 15)\n    ) |&gt; \n  tidyr::pivot_longer(\n    cols = everything(), names_to = \"dist\", values_to = \"value\"\n    )\n\nscore_distributions |&gt; \n  ggplot(aes(value, fill = dist)) +\n  geom_density(alpha = 0.6) +\n  labs(\n    title = \"IQ Scores Observed & Null Distributions (n = 75)\",\n    x = \"IQ Score\", y = NULL\n    ) +\n  scwplot::scale_fill_qualitative(palette = \"scw\")"
+  },
+  {
+    "objectID": "index.html#one-sample-t-test-3",
+    "href": "index.html#one-sample-t-test-3",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "One-Sample T-Test",
+    "text": "One-Sample T-Test\n\n\nset.seed(42)\n\nlarger_sample &lt;- \n  tibble(iq_score = rnorm(75, mean = 105, sd = 15))\n\nt_test(\n  larger_sample, response = iq_score, \n  mu = 100, alternative = \"two-sided\"\n  ) |&gt; \n  mutate(\n    across(where(is.numeric), ~round(.x, 2))\n    ) |&gt;\n  select(statistic, p_value, estimate, lower_ci, upper_ci) |&gt; \n  gt::gt()\n\n\n\n\n\n\nIQ Scores T-Test (n = 75)\n\n\nstatistic\np_value\nestimate\nlower_ci\nupper_ci\n\n\n\n\n2.83\n0.01\n105.36\n101.59\n109.12"
   },
   {
     "objectID": "index.html#a-test-for-every-eventuality",
@@ -53,20 +74,41 @@
     "href": "index.html#simulating-a-t-test",
     "title": "Simulation-Based Hypothesis Testing",
     "section": "Simulating a T-Test",
-    "text": "Simulating a T-Test\n\n\nt &lt;- \n  iq_scores |&gt; \n  specify(response = score) |&gt; \n  calculate(stat = \"mean\")\n\nnull &lt;- \n  iq_scores |&gt;\n  specify(response = score) |&gt; \n  hypothesize(null = \"point\", mu = 100) |&gt; \n  generate(reps = 1000, type = \"bootstrap\") |&gt; \n  calculate(stat = \"mean\")\n\np &lt;- null |&gt; get_p_value(obs_stat = t, direction = \"greater\")\n\nnull |&gt;\n  visualize() + \n  shade_p_value(t, direction = NULL, color = \"#00A499\") +\n  geom_hline(yintercept = 0, colour = \"#333333\", linewidth = 1) +\n  annotate(\n    \"text\", x = 95, y = 125, \n    label = paste0(\"t = \", round(t, 2), \"\\n p = \", round(p, 2)),\n    size = rel(6), color=\"grey30\"\n    ) +\n  labs(x = \"IQ Score\", y = NULL, title = NULL)"
+    "text": "Simulating a T-Test\n\n\nt &lt;- \n  smaller_sample |&gt; \n  specify(response = iq_score) |&gt; \n  calculate(stat = \"mean\")\n\nnull &lt;- \n  smaller_sample |&gt;\n  specify(response = iq_score) |&gt; \n  hypothesize(null = \"point\", mu = 100) |&gt; \n  generate(reps = 1000, type = \"bootstrap\") |&gt; \n  calculate(stat = \"mean\")\n\np &lt;- null |&gt; get_p_value(obs_stat = t, direction = \"two-sided\")\n\nnull |&gt;\n  visualize() + \n  shade_p_value(t, direction = \"two-sided\") +\n  annotate(\n    \"text\", x = 95, y = 125, \n    label = paste0(\"t = \", round(t, 2), \"\\n p = \", round(p, 2)),\n    size = rel(6), color=\"grey30\"\n    ) +\n  labs(x = \"IQ Score\", y = NULL, title = NULL)"
+  },
+  {
+    "objectID": "index.html#simulating-a-t-test-1",
+    "href": "index.html#simulating-a-t-test-1",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "Simulating a T-Test",
+    "text": "Simulating a T-Test\n\n\nt &lt;- \n  larger_sample |&gt; \n  specify(response = iq_score) |&gt; \n  calculate(stat = \"mean\")\n\nnull &lt;- \n  larger_sample |&gt;\n  specify(response = iq_score) |&gt; \n  hypothesize(null = \"point\", mu = 100) |&gt; \n  generate(reps = 1000, type = \"bootstrap\") |&gt; \n  calculate(stat = \"mean\")\n\np &lt;- null |&gt; get_p_value(obs_stat = t, direction = \"two-sided\")\n\nnull |&gt;\n  visualize() + \n  shade_p_value(t, direction = \"two-sided\") +\n  annotate(\n    \"text\", x = 95, y = 125, \n    label = paste0(\"t = \", round(t, 2), \"\\n p = \", round(p, 2)),\n    size = rel(6), color=\"grey30\"\n    ) +\n  labs(x = \"IQ Score\", y = NULL, title = NULL)"
+  },
+  {
+    "objectID": "index.html#advantages-of-the-simulation-approach",
+    "href": "index.html#advantages-of-the-simulation-approach",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "Advantages of the Simulation Approach",
+    "text": "Advantages of the Simulation Approach\n\nThere is only one test!\nThis approach is transparent, quick, and flexible.\nBuilding tests from simulations is an excellent way to gain an intuition for how hypothesis testing works.\nLearning to use simulations for checking assumptions and considering the implications of your model is good practice."
+  },
+  {
+    "objectID": "index.html#conclusion",
+    "href": "index.html#conclusion",
+    "title": "Simulation-Based Hypothesis Testing",
+    "section": "Conclusion",
+    "text": "Conclusion\n\nThere is an endless supply of statistical tests for every test statistic, data distribution, and method for calculating the p-value.\nMost of these statistical tests are just linear models anyway.\nThey are all doing the same thing. There is only one test.\nUse simulation-based hypothesis testing and never have to learn what a Wilcoxon signed rank test actually is."
   },
   {
     "objectID": "index.html#further-resources",
     "href": "index.html#further-resources",
     "title": "Simulation-Based Hypothesis Testing",
     "section": "Further Resources",
-    "text": "Further Resources\n\n{infer}\nThere is Still Only One Test\nElements of Data Science - Hypothesis Testing\nThe Permutation Test"
+    "text": "Further Resources\n\n{infer}\nThere is Still Only One Test\nElements of Data Science - Hypothesis Testing\nThe Permutation Test\nData Science Guides - Hypothesis Testing"
   },
   {
     "objectID": "index.html#references",
     "href": "index.html#references",
     "title": "Simulation-Based Hypothesis Testing",
     "section": "References",
-    "text": "References\n\n\n\n\nDowney, Allen. 2016. “There Is Still One One Test.” Probably Overthinking It. https://allendowney.substack.com/p/there-is-still-only-one-test."
+    "text": "References\n\n\n\n\nBlackwell, Matthew. 2023. “A User’s Guide to Statistical Inference and Regression.” https://mattblackwell.github.io/gov2002-book/.\n\n\nDowney, Allen. 2016. “There Is Still One One Test.” Probably Overthinking It. https://allendowney.substack.com/p/there-is-still-only-one-test."
   }
 ]
